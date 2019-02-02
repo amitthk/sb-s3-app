@@ -1,0 +1,13 @@
+app:
+  aws:
+    access_key_id: adfasdf
+    secret_access_key: dfasdfas
+  s3:
+    bucket: asdfasdfasd
+    region: us-east-1
+
+spring:
+  profiles:
+    active: dev
+server:
+  port: 8997
