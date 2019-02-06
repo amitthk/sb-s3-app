@@ -6,6 +6,16 @@ app:
     bucket: asdfasdfasd
     region: us-east-1
 
+jwt:
+  token:
+    secret: somereallycomplexsecret
+
+allowed:
+  cors:
+    origins: http://localhost:4200,http://localhost:8090,http://amitthk.mywire.org:8091,*
+  http:
+    methods: HEAD,GET,POST,PUT,DELETE,PATCH,OPTIONS
+
 spring:
   profiles:
     active: dev

@@ -31,13 +31,13 @@ public class HomeController {
         return(lstRtrn);
     }
 
-    @PostMapping("/file/upload")
+    @PostMapping("/api/file/upload")
     public String uploadMultipartFile(@RequestParam("keyname") String keyName, @RequestParam("uploadfile") MultipartFile file) {
         s3Repository.addObject(keyName, file);
         return "Upload Successfully. -> KeyName = " + keyName;
     }
 
-    @GetMapping("/file")
+    @GetMapping("/api/file/download")
     public ResponseEntity<byte[]> downloadObject(@RequestParam(value = "keyname",required = true) String keyname) {
         ByteArrayOutputStream downloadInputStream = s3Repository.readObject(keyname);
 
@@ -47,7 +47,7 @@ public class HomeController {
                 .body(downloadInputStream.toByteArray());
     }
 
-    @DeleteMapping("/file")
+    @DeleteMapping("/api/file/delete")
     public String deleteObject(@RequestParam(value = "keyname",required = true) String keyname) {
         s3Repository.deleteObject(keyname);
 
