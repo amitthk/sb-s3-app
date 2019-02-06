@@ -1,4 +1,4 @@
-# Spring BOOT AWS S3 CRUD Application with Swagger
+# Amazon S3 backend based web repository for uploading/downloading/hosting files 
 
 ## Features:
 * Amazon AWS S3 based backend for uploading/downloading files
