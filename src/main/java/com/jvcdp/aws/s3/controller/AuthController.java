@@ -23,10 +23,11 @@ public class AuthController {
 
 
     @RequestMapping(value="login", method=RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Boolean login(@RequestBody LoginViewModel userinfo){
+    public String login(@RequestBody LoginViewModel userinfo) throws Exception{
 
         try{
-            return(userInfoService.authenticate(userinfo.getEmailAddress(),userinfo.getPassword()));
+            boolean status = userInfoService.authenticate(userinfo.getEmailAddress(),userinfo.getPassword());
+            return status?"You have successfully logged in!":"Something went wrong. Please try again!";
         }
         catch (Exception exc){
             throw exc;
@@ -34,24 +35,10 @@ public class AuthController {
     }
 
     @RequestMapping(value="register", method=RequestMethod.PUT,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public UserInfo register(@Valid @RequestBody LoginViewModel login_vm) throws Exception{
-        if(null!=userInfoService.findByEmail((login_vm.getEmailAddress()))){
-            throw new Exception("There is an account with that email address");
-        }
+    public String register(@Valid @RequestBody LoginViewModel login_vm) throws Exception{
         try{
-            UserInfo newUser= new UserInfo();
-            newUser.setUserName(login_vm.getEmailAddress());
-            newUser.setEmail(login_vm.getEmailAddress());
-            DateTime now = new DateTime();
-            newUser.setLastLogin(now);
-
-            //Password hashing
-            String salt =Utility.getRandomHash();
-            newUser.setPasswordHash(Utility.md5Hash(login_vm.getPassword(), salt));
-            newUser.setSalt(salt);
-
-            newUser= userInfoService.addUser(newUser);
-            return(newUser);
+            Boolean status = userInfoService.addUser(login_vm.getEmailAddress(),login_vm.getPassword());
+            return status?"You are successfully registered!":"Something went wrong!";
         }catch(Exception exc){
             throw(exc);
         }

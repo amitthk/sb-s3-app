@@ -1,5 +1,6 @@
 package com.jvcdp.aws.s3.services.impl;
 
+import com.amazonaws.services.devicefarm.model.ArgumentException;
 import com.jvcdp.aws.s3.model.UserInfo;
 import com.jvcdp.aws.s3.services.UserInfoService;
 import com.jvcdp.aws.s3.services.Utility;
@@ -20,10 +21,29 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserInfo addUser(UserInfo userDetails) {
-        userDetails.setId(new Long(_lstUsrs.size()));
-        _lstUsrs.add(userDetails);
-        return userDetails;
+    public boolean addUser(String emailAddress, String password) {
+        try{
+
+            if(null!=this.findByEmail((emailAddress))){
+                throw new ArgumentException("There is an account with that email address");
+            }
+            UserInfo newUser= new UserInfo();
+            newUser.setUserName(emailAddress);
+            newUser.setEmail(emailAddress);
+            DateTime now = new DateTime();
+            newUser.setLastLogin(now);
+
+            //Password hashing
+            String salt =Utility.getRandomHash();
+            newUser.setPasswordHash(Utility.md5Hash(password, salt));
+            newUser.setSalt(salt);
+            newUser.setId(new Long(_lstUsrs.size()));
+            _lstUsrs.add(newUser);
+            return true;
+
+        }catch (Exception exc){
+            throw exc;
+        }
     }
 
     @Override
@@ -32,7 +52,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         if(existing!=null) {
             String salt =existing.getSalt();
             String hash = Utility.md5Hash(password, salt);
-            if(hash==existing.getPasswordHash())
+            if(hash.equals(existing.getPasswordHash()))
             {
                 DateTime now = new DateTime();
                 //existing.setLastLogin(now);

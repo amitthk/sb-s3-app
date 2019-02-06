@@ -3,8 +3,8 @@ package com.jvcdp.aws.s3.services;
 import com.jvcdp.aws.s3.model.UserInfo;
 
 public interface UserInfoService {
-    public UserInfo findByEmail(String emailAddress);
-    public UserInfo addUser(UserInfo userDetails);
+    UserInfo findByEmail(String emailAddress);
+    boolean addUser(String emailAddress, String password);
 
     boolean authenticate(String emailAddress, String password);
 }
