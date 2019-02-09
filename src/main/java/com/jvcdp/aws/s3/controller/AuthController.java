@@ -2,6 +2,8 @@ package com.jvcdp.aws.s3.controller;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
+import com.amazonaws.services.devicefarm.model.ArgumentException;
 import com.jvcdp.aws.s3.model.LoginViewModel;
 import com.jvcdp.aws.s3.model.UserInfo;
 import com.jvcdp.aws.s3.services.UserInfoService;
@@ -41,6 +43,10 @@ public class AuthController {
     @ExceptionHandler(SecurityException.class)
     void handleBadRequests(HttpServletResponse response) throws IOException {
         response.sendError(HttpStatus.BAD_REQUEST.value(), "Invalid Credentials!");
+    }
+    @ExceptionHandler(ArgumentException.class)
+    void handleBadArgumentRequests(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.BAD_REQUEST.value(), "Arguments are invalid or there an existing id with that email!");
     }
 
     @RequestMapping(value="logout", method=RequestMethod.POST)

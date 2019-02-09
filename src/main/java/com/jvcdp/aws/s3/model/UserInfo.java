@@ -1,6 +1,7 @@
 package com.jvcdp.aws.s3.model;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
 import java.io.Serializable;
 
@@ -11,13 +12,13 @@ public class UserInfo implements Serializable {
     private String passwordHash;
     private String email;
     private String salt;
-    private DateTime lastLogin;
+    private String lastLogin;
 
     public UserInfo() {
         super();
     }
 
-    public UserInfo(Long id, String name, String userName, String passwordHash, String email, String salt) {
+    public UserInfo(Long id, String name, String userName, String passwordHash, String email, String salt, String lastLogin) {
         super();
         this.id = id;
         this.name = name;
@@ -25,6 +26,7 @@ public class UserInfo implements Serializable {
         this.passwordHash = passwordHash;
         this.email = email;
         this.salt = salt;
+        this.lastLogin = lastLogin;
     }
 
     public Long getId() {
@@ -75,11 +77,11 @@ public class UserInfo implements Serializable {
         this.salt = salt;
     }
 
-    public DateTime getLastLogin() {
+    public String getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(DateTime lastLogin) {
+    public void setLastLogin(String lastLogin) {
         this.lastLogin = lastLogin;
     }
 }

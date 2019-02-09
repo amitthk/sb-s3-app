@@ -7,6 +7,7 @@ import com.jvcdp.aws.s3.services.Utility;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +31,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             UserInfo newUser= new UserInfo();
             newUser.setUserName(emailAddress);
             newUser.setEmail(emailAddress);
-            DateTime now = new DateTime();
-            newUser.setLastLogin(now);
+            newUser.setLastLogin(LocalDateTime.now().toString());
 
             //Password hashing
             String salt =Utility.getRandomHash();

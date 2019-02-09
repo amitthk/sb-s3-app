@@ -11,6 +11,7 @@ import { Response } from '@angular/http';
 })
 export class LoginComponent implements OnInit {
   public error: string;
+  public message: string;
 
   constructor(private router: Router,
     private authenticationService: AuthenticationService, private alertService: AlertService) { }
