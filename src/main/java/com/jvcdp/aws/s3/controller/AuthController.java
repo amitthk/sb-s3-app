@@ -1,5 +1,6 @@
 package com.jvcdp.aws.s3.controller;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import com.jvcdp.aws.s3.model.LoginViewModel;
 import com.jvcdp.aws.s3.model.UserInfo;
@@ -7,11 +8,11 @@ import com.jvcdp.aws.s3.services.UserInfoService;
 import com.jvcdp.aws.s3.services.Utility;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 
 @RestController
@@ -28,6 +29,29 @@ public class AuthController {
         try{
             boolean status = userInfoService.authenticate(userinfo.getEmailAddress(),userinfo.getPassword());
             return status?"You have successfully logged in!":"Something went wrong. Please try again!";
+        }
+        catch (SecurityException secexc){
+            throw secexc;
+        }
+        catch (Exception exc){
+            throw exc;
+        }
+    }
+
+    @ExceptionHandler(SecurityException.class)
+    void handleBadRequests(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.BAD_REQUEST.value(), "Invalid Credentials!");
+    }
+
+    @RequestMapping(value="logout", method=RequestMethod.POST)
+    public String logout(@RequestParam String emailAddress) throws Exception{
+
+        try{
+            //perform session cleanup here
+            return "Logged Out Successfully!";
+        }
+        catch (SecurityException secexc){
+            throw secexc;
         }
         catch (Exception exc){
             throw exc;
