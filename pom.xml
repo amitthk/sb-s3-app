@@ -76,44 +76,80 @@
 
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>generate-resources</phase>
-						<configuration>
-							<tasks>
-								<exec executable="cmd" osfamily="windows"
-									  dir="${project.basedir}\src\main\webapp">
-									<arg value="/c"/>
-									<arg value="npm run ng build -- --prod"/>
-								</exec>
-								<exec executable="/bin/sh" osfamily="mac"
-									  dir="${project.basedir}/src/main/webapp">
-									<arg value="-c"/>
-									<arg value="npm run ng build"/>
-								</exec>
-								<exec executable="/bin/bash" osfamily="unix"
-									  dir="${project.basedir}/src/main/webapp">
-									<arg value="-c"/>
-									<arg value="npm run ng build"/>
-								</exec>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+	<profiles>
+		<profile>
+			<id>jar</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<spring.profiles.active>dev</spring.profiles.active>
+				<log4j.level>DEBUG</log4j.level>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<spring.profiles.active>prod</spring.profiles.active>
+				<log4j.level>ERROR</log4j.level>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>embedui</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>generate-resources</phase>
+								<configuration>
+									<tasks>
+										<exec executable="cmd" osfamily="windows"
+											  dir="${project.basedir}\src\main\webapp">
+											<arg value="/c"/>
+											<arg value="npm run ng build -- --prod"/>
+										</exec>
+										<exec executable="/bin/sh" osfamily="mac"
+											  dir="${project.basedir}/src/main/webapp">
+											<arg value="-c"/>
+											<arg value="npm run ng build"/>
+										</exec>
+										<exec executable="/bin/bash" osfamily="unix"
+											  dir="${project.basedir}/src/main/webapp">
+											<arg value="-c"/>
+											<arg value="npm run ng build"/>
+										</exec>
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 
 </project>
