@@ -12,7 +12,7 @@ jwt:
 
 allowed:
   cors:
-    origins: http://localhost:4200,http://localhost:8090,http://amitthk.mywire.org:8091,*
+    origins: *
   http:
     methods: HEAD,GET,POST,PUT,DELETE,PATCH,OPTIONS
 

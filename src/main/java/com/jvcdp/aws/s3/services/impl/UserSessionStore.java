@@ -20,10 +20,20 @@ public class UserSessionStore {
 
     private String region;
 
+    private String currentS3Bucket;
+
     private AmazonS3 s3Client;
 
     public UserSessionStore() {
 
+    }
+
+    public String getCurrentS3Bucket() {
+        return currentS3Bucket;
+    }
+
+    public void setCurrentS3Bucket(String currentS3Bucket) {
+        this.currentS3Bucket = currentS3Bucket;
     }
 
     public void setCredentials(String awsId, String awsKey, String region) {

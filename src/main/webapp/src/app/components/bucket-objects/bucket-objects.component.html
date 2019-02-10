@@ -4,13 +4,9 @@
 
       <h1>Bucket Object Details</h1>
       <form class="form-horizontal">
-        <div class="form-group"><label for="inputContents" class="col-sm-3 control-label">access_key_id</label>
-          <div class="col-sm-7"><input type="text" class="form-control" name="access_key_id" [(ngModel)]="loginModel.access_key_id" id="loginModel.access_key_id"
-              placeholder="access_key_id"></div>
-        </div>
-        <div class="form-group"><label for="inputContents" class="col-sm-3 control-label">secret_access_key</label>
-          <div class="col-sm-7"><input type="text" class="form-control" name="secret_access_key" [(ngModel)]="loginModel.secret_access_key" id="loginModel.secret_access_key"
-              placeholder="secret_access_key"></div>
+        <div class="form-group"><label for="inputContents" class="col-sm-3 control-label">bucketName</label>
+          <div class="col-sm-7"><input type="text" class="form-control" name="bucketName" [(ngModel)]="s3BucketDetailsModel.bucketName" id="s3BucketDetailsModel.bucketName"
+              placeholder="bucketName"></div>
         </div>
         <div class="form-group">
           <label class="col-sm-3" for="submit"></label>

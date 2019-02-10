@@ -3,6 +3,7 @@ package com.jvcdp.aws.s3.controller;
 import com.amazonaws.services.devicefarm.model.ArgumentException;
 import com.jvcdp.aws.s3.model.S3CredentialsModel;
 import com.jvcdp.aws.s3.services.S3Repository;
+import com.jvcdp.aws.s3.services.impl.UserSessionStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -11,19 +12,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 @RestController("/api")
 public class HomeController {
 
-    @Value("${app.s3.bucket}")
-    private String apps3Bucket;
+    @Resource(name="getUserSessionStore")
+    UserSessionStore userSessionStore;
 
     @Autowired
     S3Repository s3Repository;
 
-    @GetMapping("/list")
+    @GetMapping("/api/list")
     public List<String> listBucket(@RequestParam(value = "bucketName", required = true) String bucketName) throws Exception {
         if(bucketName==null){
             throw new ArgumentException("bucketName cannot be null!");
@@ -33,21 +35,21 @@ public class HomeController {
         return(lstRtrn);
     }
 
-    @PostMapping("/api/updatecredentials")
+    @PostMapping("/api/s3/updatecredentials")
     public String updateCredentials(@RequestBody S3CredentialsModel s3CredentialsModel) {
         s3Repository.setCredentials(s3CredentialsModel.getAccess_key_id(),s3CredentialsModel.getSecret_access_key(),s3CredentialsModel.getRegion());
         return "Credentials successfully updated!";
     }
 
     @PostMapping("/api/file/upload")
-    public String uploadMultipartFile(@RequestParam("keyname") String keyName, @RequestParam("uploadfile") MultipartFile file) throws Exception {
-        s3Repository.addObject(this.apps3Bucket, keyName, file);
+    public String uploadMultipartFile(@RequestParam(value = "bucketName", required = true) String bucketName, @RequestParam("keyname") String keyName, @RequestParam("uploadfile") MultipartFile file) throws Exception {
+        s3Repository.addObject(bucketName, keyName, file);
         return "Upload Successfully. -> KeyName = " + keyName;
     }
 
     @GetMapping("/api/file/download")
-    public ResponseEntity<byte[]> downloadObject(@RequestParam(value = "keyname",required = true) String keyname) throws Exception {
-        ByteArrayOutputStream downloadInputStream = s3Repository.readObject(this.apps3Bucket,keyname);
+    public ResponseEntity<byte[]> downloadObject(@RequestParam(value = "bucketName", required = true) String bucketName, @RequestParam(value = "keyname",required = true) String keyname) throws Exception {
+        ByteArrayOutputStream downloadInputStream = s3Repository.readObject(bucketName,keyname);
 
         return ResponseEntity.ok()
                 .contentType(contentType(keyname))
@@ -56,8 +58,8 @@ public class HomeController {
     }
 
     @DeleteMapping("/api/file/delete")
-    public String deleteObject(@RequestParam(value = "keyname",required = true) String keyname) throws Exception {
-        s3Repository.deleteObject(this.apps3Bucket,keyname);
+    public String deleteObject(@RequestParam(value = "bucketName", required = true) String bucketName, @RequestParam(value = "keyname",required = true) String keyname) throws Exception {
+        s3Repository.deleteObject(bucketName,keyname);
 
         return String.format("File %s deleted!",keyname);
     }

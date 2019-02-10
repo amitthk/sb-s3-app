@@ -22,11 +22,13 @@ export class Sbs3appService implements OnInit {
   }
 
   postS3bucketRequest(loginInfo: S3LoginModel): Observable<BucketInfoModel[]> {
-    return this.http.post(this.apiUrl + 'buckets', loginInfo, this.getOptions()).map((response: Response) => response.json());
+    return this.http.post(this.apiUrl + 's3/updatecredentials',
+    loginInfo, this.getOptions()).map((response: Response) => response.json());
   }
 
-  postS3bucketObjectRequest(loginInfo: S3LoginModel): Observable<BucketDetailsModel[]> {
-    return this.http.post(this.apiUrl + 'bucketobjects', loginInfo, this.getOptions()).map((response: Response) => response.json());
+  postS3bucketObjectRequest(bucketName: String): Observable<string[]> {
+    return this.http.post(this.apiUrl + 'list', { bucketName : bucketName},
+    this.getOptions()).map((response: Response) => response.json());
   }
 
 private getOptions(options?: RequestOptionsArgs): RequestOptionsArgs {

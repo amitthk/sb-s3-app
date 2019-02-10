@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Sbs3appService } from '../../services/sbs3app.service';
-import { S3LoginModel, BucketDetailsModel } from '../../models/';
 
+export class S3BucketDetailsModel {
+  bucketName: string;
+  listOfKeys: string[];
+}
 
 @Component({
   selector: 'app-bucket-objects',
@@ -10,8 +13,7 @@ import { S3LoginModel, BucketDetailsModel } from '../../models/';
 })
 export class BucketObjectsComponent implements OnInit {
 
-  public result: BucketDetailsModel[];
-  public loginModel: S3LoginModel;
+  public s3BucketDetailsModel: S3BucketDetailsModel;
   public inProgress: Boolean;
   public isSuccess: Boolean;
   public isFailed: Boolean;
@@ -21,21 +23,16 @@ export class BucketObjectsComponent implements OnInit {
   constructor(private sbs3appService: Sbs3appService) { }
 
   ngOnInit() {
-    this.result = [];
-    this.loginModel = new S3LoginModel();
+    this.s3BucketDetailsModel = new S3BucketDetailsModel();
   }
 
   submitRequest() {
 
-    if (this.loginModel.access_key_id === '' || this.loginModel.secret_access_key === '') {
-      alert('Access_key_id and secret_access_key cannot be null!');
-      return;
-    }
 
     this.inProgress = true;
     this.percentComplete = 25;
-    this.sbs3appService.postS3bucketObjectRequest(this.loginModel).subscribe((response: BucketDetailsModel[]) => {
-      this.result = response;
+    this.sbs3appService.postS3bucketObjectRequest(this.s3BucketDetailsModel.bucketName).subscribe((response: string[]) => {
+      this.s3BucketDetailsModel.listOfKeys = response;
       this.inProgress = false;
       this.percentComplete = 100;
       this.isSuccess = true;

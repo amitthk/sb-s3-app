@@ -64,7 +64,7 @@ public class AuthController {
         }
     }
 
-    @RequestMapping(value="register", method=RequestMethod.PUT,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value="register", method=RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String register(@Valid @RequestBody LoginViewModel login_vm) throws Exception{
         try{
             Boolean status = userInfoService.addUser(login_vm.getEmailAddress(),login_vm.getPassword());
