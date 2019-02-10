@@ -31,12 +31,12 @@ export class BucketObjectsComponent implements OnInit {
 
     this.inProgress = true;
     this.percentComplete = 25;
-    this.sbs3appService.postS3bucketObjectRequest(this.s3BucketDetailsModel.bucketName).subscribe((response: string[]) => {
+    this.sbs3appService.getS3bucketObjectRequest(this.s3BucketDetailsModel.bucketName).subscribe((response: string[]) => {
       this.s3BucketDetailsModel.listOfKeys = response;
       this.inProgress = false;
       this.percentComplete = 100;
       this.isSuccess = true;
-
+  
     }, this.handleError,
       this.handleCompleted);
   }

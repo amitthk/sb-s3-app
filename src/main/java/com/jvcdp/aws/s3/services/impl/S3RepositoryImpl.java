@@ -30,6 +30,12 @@ public class S3RepositoryImpl implements S3Repository {
 	@Resource(name="getUserSessionStore")
 	UserSessionStore userSessionStore;
 
+	@Bean
+	@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+	public UserSessionStore getUserSessionStore(){
+		return new UserSessionStore();
+	}
+
 	@Override
 	public void setCredentials(String access_key_id, String secret_access_key, String region){
 		userSessionStore.setCredentials(access_key_id,secret_access_key,region);

@@ -11,7 +11,6 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 
-@Component
 public class UserSessionStore {
 
     private String awsId;

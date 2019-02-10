@@ -43,47 +43,6 @@
       </div>
     </div>
     <div class="col-sm-12" *ngIf="isSuccess">
-      <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <td>
-                Bucket Name
-              </td>
-              <td>
-                Creation Date
-              </td>
-              <td>
-                Last Modified
-              </td>
-              <td>
-                Number of Files
-              </td>
-              <td>
-                Total Size of Files
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let resp of result">
-              <td>
-                {{resp.bucket_name}}
-              </td>
-              <td>
-                {{resp.creation_date}}
-              </td>
-              <td>
-                {{resp.last_modified}}
-              </td>
-              <td>
-                {{resp.number_of_files}}
-              </td>
-              <td>
-                {{resp.total_size_of_files}}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      {{result}}
     </div>
   </div>

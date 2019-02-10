@@ -38,13 +38,13 @@
       <div class="table-responsive">
         <table class="table table-bordered">
           <tbody>
-            <tr *ngFor="let resp of result">
+            <tr>
               <td>
-                {{resp.bucket_name}}
+                {{s3BucketDetailsModel.bucketName}}
               </td>
               <td>
                 <ul class="list-group">
-                  <li class="list-group-item" *ngFor="let file_path of resp.file_paths">{{file_path}}</li>
+                  <li class="list-group-item" *ngFor="let file_path of s3BucketDetailsModel.listOfKeys">{{file_path}}</li>
                 </ul>
               </td>
             </tr>

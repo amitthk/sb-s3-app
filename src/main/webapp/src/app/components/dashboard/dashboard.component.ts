@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Sbs3appService } from '../../services/sbs3app.service';
-import { S3LoginModel, BucketInfoModel } from '../../models/';
+import { S3LoginModel } from '../../models/';
 
 
 @Component({
@@ -10,17 +10,17 @@ import { S3LoginModel, BucketInfoModel } from '../../models/';
 })
 export class DashboardComponent implements OnInit {
 
-  public result: BucketInfoModel[];
   public loginModel: S3LoginModel;
   public inProgress: Boolean;
   public isSuccess: Boolean;
   public isFailed: Boolean;
   public percentComplete: Number;
+  public result: string;
 
   constructor(private sbs3appService: Sbs3appService) { }
 
   ngOnInit() {
-    this.result = [];
+    this.result = '';
     this.loginModel = new S3LoginModel();
   }
 
@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
     this.inProgress = true;
     this.percentComplete = 25;
 
-    this.sbs3appService.postS3bucketRequest(this.loginModel).subscribe((response: BucketInfoModel[]) => {
+    this.sbs3appService.postS3bucketRequest(this.loginModel).subscribe((response: string) => {
       this.result = response;
       this.inProgress = false;
       this.percentComplete = 100;

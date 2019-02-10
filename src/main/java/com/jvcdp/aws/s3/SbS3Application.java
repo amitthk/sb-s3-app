@@ -14,9 +14,4 @@ public class SbS3Application{
 		SpringApplication.run(SbS3Application.class, args);
 	}
 
-	@Bean
-	@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-	public UserSessionStore getUserSessionStore(){
-		return new UserSessionStore();
-	}
 }

@@ -14,20 +14,20 @@ export class Sbs3appService implements OnInit {
   private apiUrl: string;
 
   constructor(private http: Http) {
-    this.apiUrl =  AppSettings.envEndpoints.get(environment.env) ;
+    this.apiUrl =  '/api/'; // AppSettings.envEndpoints.get(environment.env) ;
   }
 
   ngOnInit() {
 
   }
 
-  postS3bucketRequest(loginInfo: S3LoginModel): Observable<BucketInfoModel[]> {
+  postS3bucketRequest(loginInfo: S3LoginModel): Observable<string> {
     return this.http.post(this.apiUrl + 's3/updatecredentials',
-    loginInfo, this.getOptions()).map((response: Response) => response.json());
+    loginInfo, this.getOptions()).map((response: Response) => response.text());
   }
 
-  postS3bucketObjectRequest(bucketName: String): Observable<string[]> {
-    return this.http.post(this.apiUrl + 'list', { bucketName : bucketName},
+  getS3bucketObjectRequest(bucketName: String): Observable<string[]> {
+    return this.http.get(this.apiUrl + 'list?bucketName=' + bucketName,
     this.getOptions()).map((response: Response) => response.json());
   }
 
