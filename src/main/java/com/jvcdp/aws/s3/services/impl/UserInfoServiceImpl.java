@@ -19,18 +19,27 @@ public class UserInfoServiceImpl implements UserInfoService {
     private UserInfoRepository userInfoRepository;
 
     @Override
-    public UserInfo findByEmail(String emailAddress) {
+    public UserInfo findByEmail(String emailAddress) throws Exception {
         List<UserInfo> lstUsr = userInfoRepository.findByEmail(emailAddress);
-        return lstUsr.get(0);
+        if((lstUsr!=null)&&(lstUsr.size()>0)) {
+            return lstUsr.get(0);
+        } else {
+            throw new Exception("There is no such user");
+        }
     }
 
     @Override
-    public boolean addUser(String emailAddress, String password) {
+    public boolean addUser(String emailAddress, String password) throws Exception {
         try{
 
-            if(null!=this.findByEmail((emailAddress))){
-                throw new ArgumentException("There is an account with that email address");
+            try{
+                if(null!=this.findByEmail((emailAddress))){
+                    throw new ArgumentException("There is an account with that email address");
+                }
+            }catch (Exception exc){
+                //The user does not exist so do nothing, we will add the user
             }
+
             UserInfo newUser= new UserInfo();
             newUser.setUserName(emailAddress);
             newUser.setEmail(emailAddress);
@@ -50,16 +59,20 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public boolean authenticate(String emailAddress, String password) {
-        UserInfo existing = this.findByEmail(emailAddress);
-        if(existing!=null) {
-            String salt =existing.getSalt();
-            String hash = Utility.md5Hash(password, salt);
-            if(hash.equals(existing.getPasswordHash()))
-            {
-                DateTime now = new DateTime();
-                //existing.setLastLogin(now);
-                return true;
+        try{
+            UserInfo existing = this.findByEmail(emailAddress);
+            if(existing!=null) {
+                String salt =existing.getSalt();
+                String hash = Utility.md5Hash(password, salt);
+                if(hash.equals(existing.getPasswordHash()))
+                {
+                    DateTime now = new DateTime();
+                    //existing.setLastLogin(now);
+                    return true;
+                }
             }
+        }catch (Exception exc){
+
         }
         return false;
     }
