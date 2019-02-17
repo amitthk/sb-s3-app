@@ -11,4 +11,5 @@ public interface S3Repository {
 	public void addObject(String bucketName, String keyName, MultipartFile file) throws Exception;
 	public void deleteObject(String bucketName, String keyName) throws Exception;
 	public void setCredentials(String access_key_id, String secret_access_key, String region);
+	public void saveSessionByEmail(String email);
 }

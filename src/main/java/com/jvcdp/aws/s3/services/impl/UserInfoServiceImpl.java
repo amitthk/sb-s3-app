@@ -20,7 +20,8 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfo findByEmail(String emailAddress) {
-        return userInfoRepository.findByEmail(emailAddress);
+        List<UserInfo> lstUsr = userInfoRepository.findByEmail(emailAddress);
+        return lstUsr.get(0);
     }
 
     @Override

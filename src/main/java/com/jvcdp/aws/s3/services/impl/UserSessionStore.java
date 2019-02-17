@@ -17,6 +17,14 @@ public class UserSessionStore {
     private UserS3Info userS3Info;
     private AmazonS3 s3Client;
 
+    public UserS3Info getUserS3Info() {
+        return userS3Info;
+    }
+
+    public void setUserS3Info(UserS3Info userS3Info) {
+        this.userS3Info = userS3Info;
+    }
+
     public UserSessionStore() {
         this.userS3Info = new UserS3Info();
     }

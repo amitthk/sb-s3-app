@@ -42,6 +42,11 @@ public class S3RepositoryImpl implements S3Repository {
 	}
 
 	@Override
+	public void saveSessionByEmail(String email) {
+
+	}
+
+	@Override
 	public ByteArrayOutputStream readObject(String bucketName, String keyName) throws Exception {
 		try {
             S3Object s3object = userSessionStore.getS3client().getObject(new GetObjectRequest(bucketName, keyName));

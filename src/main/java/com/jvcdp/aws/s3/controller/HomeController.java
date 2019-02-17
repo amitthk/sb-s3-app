@@ -2,13 +2,19 @@ package com.jvcdp.aws.s3.controller;
 
 import com.amazonaws.services.devicefarm.model.ArgumentException;
 import com.jvcdp.aws.s3.model.S3CredentialsModel;
+import com.jvcdp.aws.s3.model.UserInfo;
+import com.jvcdp.aws.s3.model.UserS3Info;
 import com.jvcdp.aws.s3.services.S3Repository;
+import com.jvcdp.aws.s3.services.impl.UserInfoRepository;
+import com.jvcdp.aws.s3.services.impl.UserS3InfoRepository;
 import com.jvcdp.aws.s3.services.impl.UserSessionStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +31,12 @@ public class HomeController {
     @Autowired
     S3Repository s3Repository;
 
+    @Autowired
+    UserInfoRepository userInfoRepository;
+
+    @Autowired
+    UserS3InfoRepository userS3InfoRepository;
+
     @GetMapping("/api/list")
     public List<String> listBucket(@RequestParam(value = "bucketName", required = true) String bucketName) throws Exception {
         if(bucketName==null){
@@ -39,6 +51,40 @@ public class HomeController {
     public String updateCredentials(@RequestBody S3CredentialsModel s3CredentialsModel) {
         s3Repository.setCredentials(s3CredentialsModel.getAccess_key_id(),s3CredentialsModel.getSecret_access_key(),s3CredentialsModel.getRegion());
         return "Credentials successfully updated!";
+    }
+
+    @PostMapping("/api/s3/save_s3session")
+    public String saveS3Session() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = (String) auth.getPrincipal();
+        UserInfo userInfo = userInfoRepository.findByEmail(name).get(0);
+        if (userInfo!=null) {
+            UserS3Info userS3Info = new UserS3Info();
+            userS3Info.setUserId(userInfo.getId());
+            userS3Info.setAwsId(userSessionStore.getUserS3Info().getAwsId());
+            userS3Info.setAwsKey(userSessionStore.getUserS3Info().getAwsKey());
+            userS3Info.setRegion(userSessionStore.getUserS3Info().getRegion());
+            userS3Info.setCurrentS3Bucket(userSessionStore.getUserS3Info().getCurrentS3Bucket());
+            userS3InfoRepository.save(userS3Info);
+            return "Credentials successfully saved!";
+        }
+        else{
+            return "Details not found cannot save!";
+        }
+    }
+
+    @PostMapping("/api/s3/load_last_s3session")
+    public String loadLastS3Session() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = (String) auth.getPrincipal();
+        UserInfo userInfo = userInfoRepository.findByEmail(name).get(0);
+        if (userInfo!=null) {
+            UserS3Info userS3Info = userS3InfoRepository.findByUserId(userInfo.getId()).get(0);
+            s3Repository.setCredentials(userS3Info.getAwsId(),userS3Info.getAwsKey(),userS3Info.getRegion());
+            return "Credentials successfully loaded!";
+        }else {
+            return "Credentials not found!";
+        }
     }
 
     @PostMapping("/api/file/upload")
