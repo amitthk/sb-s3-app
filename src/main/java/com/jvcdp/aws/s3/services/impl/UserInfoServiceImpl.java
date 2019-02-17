@@ -5,6 +5,7 @@ import com.jvcdp.aws.s3.model.UserInfo;
 import com.jvcdp.aws.s3.services.UserInfoService;
 import com.jvcdp.aws.s3.services.Utility;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,11 +15,12 @@ import java.util.List;
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
 
-    private List<UserInfo> _lstUsrs = new ArrayList<UserInfo>();
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
     @Override
     public UserInfo findByEmail(String emailAddress) {
-        return Utility.findByProperty(_lstUsrs,uif -> emailAddress.equalsIgnoreCase(uif.getEmail()));
+        return userInfoRepository.findByEmail(emailAddress);
     }
 
     @Override
@@ -37,8 +39,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             String salt =Utility.getRandomHash();
             newUser.setPasswordHash(Utility.md5Hash(password, salt));
             newUser.setSalt(salt);
-            newUser.setId(new Long(_lstUsrs.size()));
-            _lstUsrs.add(newUser);
+            userInfoRepository.saveAndFlush(newUser);
             return true;
 
         }catch (Exception exc){
